@@ -1,0 +1,127 @@
+{
+   "application":"dinghy-test-repo",
+   "globals": {},
+   "pipelines":[
+      {
+         "application":"dinghy-test-repo",
+         "name":"Dinghy Infrastructure Provisioning",
+         "description":"<img src=\"https://media.giphy.com/media/VDMDnHvgwBGNN58UXN/giphy.gif\" />",
+         "keepWaitingPipelines":false,
+         "limitConcurrent":true,
+         "parameterConfig":[
+            {
+               "default":"staging",
+               "description":"Environment",
+               "hasOptions":true,
+               "label":"Environment",
+               "name":"environment",
+               "options":[
+                  {
+                     "value":"staging"
+                  },
+                  {
+                     "value":"prod"
+                  }
+               ],
+               "pinned":true,
+               "required":true
+            }
+         ],
+         "stages":[
+            {
+               "action":"apply",
+               "artifacts":[
+                  {
+                     "account":"gitrepo-armory",
+                     "artifact":{
+                        "artifactAccount":"gitrepo-armory",
+                        "customKind":true,
+                        "id":"8d9af425-997d-4b1a-9974-a5908105dcfe",
+                        "name":"dinghy",
+                        "reference":"https://github.com/armory-io/dinghy.git",
+                        "type":"git/repo",
+                        "version":"master"
+                     }
+                  }
+               ],
+               "dir":"infrastructure",
+               "name":"Infrastructure Configuration",
+               "overrides":{
+
+               },
+               "profile":"",
+               "refId":"1",
+               "requisiteStageRefIds":[
+
+               ],
+               "targets":[
+
+               ],
+               "terraformVersion":"0.14.2",
+               "type":"terraform",
+               "workspace":"${ parameters.environment }"
+            }
+         ],
+         "triggers":[
+
+         ]
+      },
+      {
+        "application": "dinghy",
+        "name": "Deploy on Merge",
+        "description":"<img src=\"https://media.giphy.com/media/yidUzuMf6DH8cz09zO/giphy.gif\" />",
+        "keepWaitingPipelines": false,
+        "limitConcurrent": true,
+        "stages": [
+          {
+            "application": "dinghy",
+            "failPipeline": true,
+            "isNew": true,
+            "name": "Deploy to Staging",
+            "pipeline": "d07c7a1c-3bb7-4b9f-a00f-d2b4fb387b92",
+            "refId": "1",
+            "requisiteStageRefIds": [],
+            "type": "pipeline",
+            "waitForCompletion": true
+          },
+          {
+            "failPipeline": true,
+            "isNew": true,
+            "judgmentInputs": [],
+            "name": "Approve Deploy to Prod",
+            "notifications": [],
+            "refId": "2",
+            "requisiteStageRefIds": [
+              "1"
+            ],
+            "type": "manualJudgment"
+          },
+          {
+            "application": "dinghy",
+            "failPipeline": true,
+            "isNew": true,
+            "name": "Deploy to Production",
+            "pipeline": "f6b1c79f-452e-4ab9-b453-12c776296d68",
+            "refId": "3",
+            "requisiteStageRefIds": [
+              "2"
+            ],
+            "type": "pipeline",
+            "waitForCompletion": true
+          }
+        ],
+        "triggers": [
+            {
+               "account": "artifactory",
+               "enabled": true,
+               "organization": "armory",
+               "registry": "armory-docker-local.jfrog.io",
+               "repository": "armory/dinghy",
+               "type": "docker"
+            }
+        ]
+      },
+      {{ module "dinghy/modules/deploy.dinghy" "environmentName" "staging"}},
+      {{ module "dinghy/modules/deploy.dinghy" "environmentName" "prod" }}
+  ]
+}
