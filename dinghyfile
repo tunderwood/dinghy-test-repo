@@ -4,7 +4,7 @@
    "pipelines":[
    {
       "application":"dinghy-test-app",
-      "name":"Dinghy Test Pipeline Foo",
+      "name":"Dinghy Test Pipeline FooBAR HI ALL",
       "description":"<img src=\"https://media.giphy.com/media/VDMDnHvgwBGNN58UXN/giphy.gif\" />",
       "keepWaitingPipelines": false,
       "lastModifiedBy": "anonymous",
