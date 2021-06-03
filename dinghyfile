@@ -3,7 +3,7 @@
     "pipelines": [
         {
           "application": "test",
-          "name": "Wait Pipeline Test 300",
+          "name": "Wait Pipeline Test 3000",
           "isNew": true,
           "keepWaitingPipelines": false,
           "limitConcurrent": false,
