@@ -1,25 +1,15 @@
 {
-   "application":"dinghy-test-app",
-   "globals": {},
-   "pipelines":[
-   {
-      "application":"dinghy-test-app",
-      "name":"Dinghy Test Pipeline FooBAR HI ALL DEMO!!",
-      "description":"<img src=\"https://media.giphy.com/media/VDMDnHvgwBGNN58UXN/giphy.gif\" />",
-      "keepWaitingPipelines": false,
-      "lastModifiedBy": "anonymous",
-      "limitConcurrent": true,
-      "spelEvaluator": "v4",
-      "stages": [
-         {
-            "name": "Wait",
-            "refId": "1",
-            "requisiteStageRefIds": [],
-            "type": "wait",
-            "waitTime": 45
-         }
-      ],
-      "triggers": []
-   }
-  ]
+    "application": "test",
+    "pipelines": [
+        {
+          "application": "test",
+          "name": "Wait Pipeline Test 3001",
+          "isNew": true,
+          "keepWaitingPipelines": false,
+          "limitConcurrent": false,
+          "stages": [
+          {{ local_module "local.stage" }}
+          ]
+        }
+    ]
 }
